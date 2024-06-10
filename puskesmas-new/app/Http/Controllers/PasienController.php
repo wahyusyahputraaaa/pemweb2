@@ -46,7 +46,7 @@ class PasienController extends Controller
 
         //menyimpan
         Pasien::create($validated);
-        return redirect ('dashboard/pasien');
+        return redirect ('dashboard/pasien')->with('tambah', 'Data Berhasil Di Tambahkan');
     }
 
     /**
@@ -63,7 +63,9 @@ class PasienController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pasien = pasien::find($id);
+        $kelurahans = kelurahan::all();
+        return view('admin.pasien.edit', compact('kelurahans','pasien'));
     }
 
     /**
@@ -71,14 +73,32 @@ class PasienController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'kode' => 'required|string',
+            'nama' => 'required|string',
+            'tgl_lahir' => 'required|date',
+            'tmp_lahir' => 'required|string',
+            'gender' => 'required|string|in:L,P',           
+            'email' => 'required|email',
+            'alamat' => 'required|string',
+            'kel_nama' => 'required|string'
+        ]);
+
+        $pasien = pasien::find($id);
+        $pasien->update($validated);
+
+        return redirect('dashboard/pasien')->with('update', 'Data Berhasil Di Perbarui');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $pasien = pasien::find($id);
+        $pasien->delete();
+        
+        return redirect('dashboard/pasien')->with('pesan', 'Data Berhasil Di Hapus');
     }
 }

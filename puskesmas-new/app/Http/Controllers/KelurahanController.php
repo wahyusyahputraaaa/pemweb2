@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kelurahan;
+use Illuminate\Auth\Events\Validated;
 
-class KelurahanController extends Controller
+class KelurahanController extends Controller 
 {
     /**
      * Display a listing of the resource.
@@ -36,8 +37,9 @@ class KelurahanController extends Controller
         ]);
 
         kelurahan::create($validated);
-        return redirect('dashboard/kelurahan');
+        return redirect('dashboard/kelurahan')->with('tambah', 'Data Berhasil Di Tambahkan');
     }
+    
 
     /**
      * Display the specified resource.
@@ -53,7 +55,8 @@ class KelurahanController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $kelurahan = Kelurahan::find($id);
+        return view('admin.kelurahan.edit', compact('kelurahan'));
     }
 
     /**
@@ -61,14 +64,28 @@ class KelurahanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // validasi from input
+        $validated = $request->validate([
+            'nama' => 'required|string',
+            'kecamatan_nama' => 'required|string'
+        ]);
+
+        $kelurahan = Kelurahan::find($id);
+        $kelurahan->update($validated);
+        
+        return redirect('dashboard/kelurahan')->with('update', 'Data Berhasil Di Perbarui');
     }
+    
+    
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $kelurahan = kelurahan::find($id);
+        $kelurahan->delete();
+
+        return redirect('dashboard/kelurahan')->with('pesan', 'Data Berhasil Di Hapus');
     }
 }
