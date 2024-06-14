@@ -68,7 +68,7 @@
                             <option value="{{ $kelurahan->nama }}"{{ $pasien->kel_nama === $kelurahan->nama ? 'selected' : '' }}>{{ $kelurahan->nama }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> 
             </div>
             <div class="form-group row">
                 <div class="col-sm-4"></div>
